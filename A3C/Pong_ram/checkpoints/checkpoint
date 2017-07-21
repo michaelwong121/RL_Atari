@@ -1,0 +1,2 @@
+model_checkpoint_path: "/tmp/a3c/checkpoints/model"
+all_model_checkpoint_paths: "/tmp/a3c/checkpoints/model"

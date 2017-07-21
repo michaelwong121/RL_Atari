@@ -1,0 +1,75 @@
+Episode 0
+mean return -5.338555
+mean Policy length 316
+Episode 500
+mean return -5.952640
+mean Policy length 289
+
+Episode 1000
+mean return -6.012566
+mean Policy length 286
+Episode 1500
+mean return -5.955705
+mean Policy length 287
+
+Episode 2000
+mean return -6.025328
+mean Policy length 286
+Episode 2500
+mean return -5.896302
+mean Policy length 293
+
+Episode 3000
+mean return -5.859994
+mean Policy length 292
+Episode 3500
+mean return -5.757170
+mean Policy length 297
+
+Episode 4000
+mean return -6.032089
+mean Policy length 292
+Episode 4500
+mean return -5.759465
+mean Policy length 298
+
+Episode 5000
+mean return -5.717456
+mean Policy length 299
+Episode 5500
+mean return -5.806719
+mean Policy length 300
+
+Episode 6000
+mean return -5.897404
+mean Policy length 298
+Episode 6500
+mean return -5.777458
+mean Policy length 296
+
+Episode 7000
+mean return -5.889871
+mean Policy length 302
+Episode 7500
+mean return -5.822309
+mean Policy length 296
+
+Episode 8000
+mean return -5.955682
+mean Policy length 300
+Episode 8500
+mean return -5.765528
+mean Policy length 303
+
+Episode 9000
+mean return -5.863735
+mean Policy length 296
+Episode 9500
+mean return -5.969279
+
+Episode 10000
+mean return -5.821199
+mean Policy length 305
+Episode 10500
+mean return -5.974746
+mean Policy length 297

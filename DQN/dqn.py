@@ -128,6 +128,25 @@ def learn(env,
     ######
     
     # YOUR CODE HERE
+    
+    # set up Q function network
+    q_val = q_func(obs_t_float, num_actions, scope="q_func", reuse=False)
+    q_func_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='q_func')
+    
+    # set up target Q network
+    target_q_val = q_func(obs_tp1_float, num_actions, scope="target_q_func", reuse=False)
+    target_q_func_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='target_q_func')
+    
+    # calculate target Q value and total error
+    max_target_Q = tf.reduce_max(target_q_val, reduction_indices=[1])
+    done_bool = tf.equal(done_mask_ph, tf.constant(1.0))
+    y = tf.where(done_bool, rew_t_ph, rew_t_ph + gamma * max_target_Q)
+    
+    this_q_val = tf.map_fn(lambda x: tf.gather(x[0], x[1]), 
+                                    (q_val, act_t_ph),
+                                    dtype = tf.float32)
+    
+    total_error = tf.square(y - this_q_val)
 
     ######
 
@@ -195,6 +214,30 @@ def learn(env,
         #####
         
         # YOUR CODE HERE
+        
+        # i) Store last obs into buffer
+        index = replay_buffer.store_frame(last_obs)
+        
+        recent_frames = np.array([replay_buffer.encode_recent_observation()])
+        
+        # ii) Use epsilon greedy to choose new action based on last_obs
+        if (not model_initialized or np.random.rand() < exploration.value(t)):
+            action = np.random.randint(env.action_space.n)
+        else:
+            q_obs_t = session.run(q_val, feed_dict={obs_t_ph: recent_frames})
+            action = np.argmax(q_obs_t)
+        
+        # iii) Step forward
+        obs, reward, done, info = env.step(action)
+        
+        # iv) Store the rest of the info into the buffer
+        replay_buffer.store_effect(index, action, reward, done)
+        
+        # v) point last_obs to new observation (if done was true, reset env)
+        if done:
+            last_obs = env.reset()
+        else:
+            last_obs = obs
 
         #####
 
@@ -245,6 +288,32 @@ def learn(env,
             #####
             
             # YOUR CODE HERE
+            
+            # a) Use replay buffer to sample a batch of transitions
+            obs_batch, act_batch, rew_batch, next_obs_batch, done_mask = replay_buffer.sample(batch_size)
+            
+            # b) init model if it is not init-ed
+            if not model_initialized:
+                initialize_interdependent_variables(session, tf.global_variables(), {
+                    obs_t_ph: obs_batch,
+                    obs_tp1_ph: next_obs_batch,
+                })
+                model_initialized = True
+            
+            # c) Train the model
+            session.run(train_fn, feed_dict={
+                obs_t_ph: obs_batch,
+                act_t_ph: act_batch,
+                rew_t_ph: rew_batch,
+                obs_tp1_ph: next_obs_batch,
+                done_mask_ph: done_mask,
+                learning_rate: optimizer_spec.lr_schedule.value(t)
+            })
+            
+            # d) Update target Q network once in a while
+            if num_param_updates % target_update_freq == 0:
+                session.run(update_target_fn)
+            num_param_updates += 1
 
             #####
 

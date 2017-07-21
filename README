@@ -1,0 +1,7 @@
+The goal of the project is to explore different reinforcement learning algorithms with the Atari enviornment. The three algorithms that I explored are: DQN, REINFORCE, and A3C.
+
+The DQN and REINFORCE code are modifications of the hw3 sub directory under the berkerlydeeprlcourse/homework repository. Link to original repo: https://github.com/berkeleydeeprlcourse/homework.git.
+
+The A3C code is a modification of the GitHub user dennybritz. The link to the original repo is https://github.com/dennybritz/reinforcement-learning/tree/master/PolicyGradient/a3c.
+
+
